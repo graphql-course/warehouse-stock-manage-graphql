@@ -1,0 +1,6 @@
+enum ProductTypeEnum {
+    TECHNOLOGY
+    SPORT
+    FOOD
+    OTHER
+}

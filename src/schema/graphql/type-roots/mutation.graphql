@@ -1,0 +1,6 @@
+type Mutation {
+    addProduct(product: ProductInput!): Result
+    updateProduct(product: ProductInput!): Result
+    blockProduct: Result
+    updateStock(code: ID!, stock: Int!): Result
+}

@@ -1,0 +1,8 @@
+union Data = Product
+
+type Result {
+  status: Boolean!
+  message: String!
+  list: [Data!]
+  item: Data
+}

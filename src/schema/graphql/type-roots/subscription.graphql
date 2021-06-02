@@ -1,0 +1,4 @@
+type Subscription {
+    changeStock: [Product!]!
+    updateProduct(code: String!): Product!
+}
