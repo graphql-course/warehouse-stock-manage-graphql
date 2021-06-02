@@ -1,2 +1,2 @@
-# spain-dgt-last-traffic-incidents-graphql
-Últimas incidencias de tráfico que ocurren en España en las últimas horas en tiempo Real. Combina los datasets de Euskadi y las demás comunidades autónomas
+# Gestión de almacén con GraphQL - Realtime
+Gestión de un almacén en tiempo real con productos de todo tipo
