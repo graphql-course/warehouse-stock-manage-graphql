@@ -4,8 +4,8 @@ import { COLLECTIONS } from '../../config/constants';
 
 const queryProductResolvers: IResolvers = {
     Query: {
+        hello: () => "Hola",
         async products(_, __, { db }) {
-            console.log("PRIeba");
             const database = db as Db;
             return await database.collection(COLLECTIONS.PRODUCTS).find().toArray().then(
                 (result: Array<object>) =>  {
