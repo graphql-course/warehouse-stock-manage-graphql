@@ -1,4 +1,5 @@
 type Subscription {
+    # Obtenemos los cambios de los producto
     changeStock: [Product!]!
-    updateProduct(code: String!): Product!
+    changeProductStock(code: String!): Product!
 }

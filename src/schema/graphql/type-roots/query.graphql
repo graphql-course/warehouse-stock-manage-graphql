@@ -1,3 +1,4 @@
 type Query {
+    "Lista de productos"
     products: Result
 }

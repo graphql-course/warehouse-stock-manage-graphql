@@ -4,7 +4,8 @@ type Product {
     "Nombre del producto"
     name: String!
     description: String!
-    price: Float!
+    price: String!
     stock: Int!
-    active: StatusEnum
+    active: StatusEnum!
+    currency: String!
 }

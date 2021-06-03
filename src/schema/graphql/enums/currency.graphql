@@ -1,0 +1,6 @@
+enum CurrencyEnum {
+    EUR
+    DOLLAR
+    YEN
+    POUND
+}

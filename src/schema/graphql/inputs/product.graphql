@@ -7,8 +7,13 @@ input ProductInput {
     code: ID!
     "Nombre del producto"
     name: String!
+    "Descripción con más detalles"
     description: String!
+    "Precio"
     price: Float!
+    "Moneda"
+    currency: CurrencyEnum=EUR
+    "Cantidad de producto disponible"
     stock: Int!
     active: StatusEnum=ACTIVE
     type: ProductTypeEnum=OTHER

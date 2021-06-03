@@ -11,3 +11,10 @@ export const enum COLLECTIONS {
 }
 
 export const UPDATE_STOCK = 'UPDATE_STOCK';
+
+export enum CURRENCIES_LIST {
+    EUR = '€',
+    DOLLAR= '$',
+    YEN= '¥',
+    POUND= '£'
+};
