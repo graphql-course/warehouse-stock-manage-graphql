@@ -15,6 +15,6 @@ input ProductInput {
     currency: CurrencyEnum=EUR
     "Cantidad de producto disponible"
     stock: Int!
-    active: StatusEnum=ACTIVE
+    active: Boolean=True
     type: ProductTypeEnum=OTHER
 }

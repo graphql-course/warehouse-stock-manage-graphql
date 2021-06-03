@@ -1,11 +1,17 @@
+"Información del producto que se encontrará en el almacén"
 type Product {
     "Código del producto"
     code: ID!
     "Nombre del producto"
     name: String!
+    "Descripción del producto del almacén"
     description: String!
+    "Precio del producto"
     price: String!
+    "Cantidad de unidades que existe en el stock de ese producto"
     stock: Int!
-    active: StatusEnum!
+    "Estado del producto, si estás disponible o no"
+    active: Boolean!
+    "Unidad monetaria que se le asigna a su precio"
     currency: String!
 }
