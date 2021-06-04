@@ -23,6 +23,7 @@ class ResolversService {
   protected getDb(): Db {
     return this.context.db!;
   }
+  protected getUUID(): string | undefined { return this.context.uuid }
   protected getVariables(): IVariables {
     return this.variables!;
   }

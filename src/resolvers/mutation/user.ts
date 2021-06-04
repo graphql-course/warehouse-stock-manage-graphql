@@ -11,11 +11,7 @@ const resolversUserMutation = {
       },
       updateUser(_: {}, args: { user: IUser }, 
         context: { db: Db, token: string, uuid: string}) {
-        // return new UsersService(_: {},  { user }, context).modify();
-      },
-      deleteUser(_: {}, args: { user: IUser }, 
-        context: { db: Db, token: string, uuid: string}) {
-        // return new UsersService(_: {},  { id }, context).delete();
+        return new UsersService(args, context).modify();
       },
       blockUser(_: {},args: { user: IUser }, 
         context: { db: Db, token: string, uuid: string}) {

@@ -19,6 +19,7 @@ class UsersService extends ResolversService {
     } else if (active === ACTIVE_VALUES_FILTER.INACTIVE) {
       filter = { active: false };
     }
+    console.log(filter);
     const page = this.getVariables().pagination?.page;
     const itemsPage = this.getVariables().pagination?.itemsPage;
     const result = await this.list(
@@ -32,29 +33,32 @@ class UsersService extends ResolversService {
       info: result.info,
       status: result.status,
       message: result.message,
-      users: result.items,
+      list: result.items,
     };
   }
   // Autenticarnos
   async auth() {
-    let info = new JWT().verify(this.getContext().token!);
-    if (info === MESSAGES.TOKEN_VERICATION_FAILED) {
+    let info = await new JWT().verify(this.getContext().token!);
+    if (info === MESSAGES.TOKEN_VERICATION_FAILED ||
+      info === MESSAGES.TOKEN_IN_THIS_MACHINE) {
       return {
         status: false,
         message: info,
-        user: null,
+        item: null,
       };
     }
     return {
       status: true,
       message: "Usuario autenticado correctamente mediante el token",
-      user: Object.values(info)[0],
+      item: Object.values(info)[0],
     };
   }
   // Iniciar sesión
   async login() {
     try {
       const variables = this.getVariables().user;
+      const uuid = this.getUUID() || '';
+      console.log(variables, uuid);
       const user = await findOneElement(this.getDb(), this.collection, {
         email: variables?.email,
       });
@@ -80,8 +84,8 @@ class UsersService extends ResolversService {
         message: !passwordCheck
           ? "Password y usuario no son correctos, sesión no iniciada"
           : "Usuario cargado correctamente",
-        token: !passwordCheck ? null : new JWT().sign({ user }, EXPIRETIME.H24),
-        user: !passwordCheck ? null : user,
+        token: !passwordCheck ? null : new JWT().sign({ user, uuid }, EXPIRETIME.H24),
+        item: !passwordCheck ? null : user,
       };
     } catch (error) {
       console.log(error);
@@ -102,7 +106,7 @@ class UsersService extends ResolversService {
       return {
         status: false,
         message: "Usuario no definido, procura definirlo",
-        user: null,
+        item: null,
       };
     }
     if (
@@ -113,7 +117,7 @@ class UsersService extends ResolversService {
       return {
         status: false,
         message: "Usuario sin password correcto, procura definirlo",
-        user: null,
+        item: null,
       };
     }
     // Comprobar que el usuario no existe
@@ -125,7 +129,7 @@ class UsersService extends ResolversService {
       return {
         status: false,
         message: `El email ${user?.email} está registrado y no puedes registrarte con este email`,
-        user: null,
+        item: null,
       };
     }
 
@@ -138,6 +142,8 @@ class UsersService extends ResolversService {
     // Encriptar password
     user!.password = bcrypt.hashSync(user!.password, 10);
 
+    user.active = false;
+
     const result = await this.add(this.collection, user || {}, "usuario");
     // Guardar el documento (registro) en la colección
     return {
@@ -148,6 +154,7 @@ class UsersService extends ResolversService {
   }
   // Modificar un usuario
   async modify() {
+    
     const user = this.getVariables().user;
     // comprobar que user no es null
     if (user === null) {
@@ -168,23 +175,6 @@ class UsersService extends ResolversService {
       status: result.status,
       message: result.message,
       item: result.item,
-    };
-  }
-  // Borrar el usuario seleccionado
-  async delete() {
-    const id = this.getVariables().id;
-    if (id === undefined || id === "") {
-      return {
-        status: false,
-        message:
-          "Identificador del usuario no definido, procura definirlo para eliminar el usuario",
-        user: null,
-      };
-    }
-    const result = await this.del(this.collection, { id }, "usuario");
-    return {
-      status: result.status,
-      message: result.message,
     };
   }
   async unblock(unblock: boolean, admin: boolean) {

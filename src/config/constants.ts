@@ -45,5 +45,6 @@ export enum CURRENCIES_LIST {
   }
 
   export enum MESSAGES {
-    TOKEN_VERICATION_FAILED = 'token no valido, inicia sesion de nuevo'
+    TOKEN_VERICATION_FAILED = 'token no valido, inicia sesion de nuevo',
+    TOKEN_IN_THIS_MACHINE = 'El token no se ha generado en esta máquina, inténtalo de nuevo'
   }

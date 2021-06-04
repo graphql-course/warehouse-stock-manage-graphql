@@ -25,11 +25,6 @@ type Mutation {
     user: UserInput!
   ): Result
   """
-  Para borrar el usuario. Esta acción no la usaremos, en su lugar para
-  hacer desaparecer un item correcto, usaremos la función de bloquear
-  """
-  deleteUser("ID único del usuario que queremos eliminar" id: ID!): Result
-  """
   Para bloquear (desactivar) el usuario y clasificarlo como "inactivo", con el que no podrá
   realizar compras, no podrá acceder a su información principal y demás
   """

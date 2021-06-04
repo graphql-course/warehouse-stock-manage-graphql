@@ -5,4 +5,6 @@ type Result {
   message: String!
   list: [Data!]
   item: Data
+  "Valor del token que se usará cuando lo creemos"
+  token: String
 }
