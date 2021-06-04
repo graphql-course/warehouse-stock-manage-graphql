@@ -5,16 +5,16 @@ import express, { Application } from "express";
 import { GraphQLSchema } from "graphql";
 import { ApolloServer, PubSub } from "apollo-server-express";
 import expressPlayGround from "graphql-playground-middleware-express";
-import depthLimit from 'graphql-depth-limit';
-import Database from './config/database';
+import depthLimit from "graphql-depth-limit";
+import Database from "./config/database";
+
 class Server {
   private app!: Application;
   private httpServer!: HTTPServer;
   private schema!: GraphQLSchema;
   private database!: Database;
   private pubsub!: PubSub;
-  private readonly DEFAULT_PORT_SERVER =
-    process.env.PORT || 3003;
+  private readonly DEFAULT_PORT_SERVER = process.env.PORT || 3003;
   private server!: ApolloServer;
   constructor(schema: GraphQLSchema) {
     if (schema === undefined) {
@@ -50,21 +50,25 @@ class Server {
 
   private async configApolloServer() {
     // COnfigurar el servidor apollo server
-
     this.server = new ApolloServer({
       schema: this.schema,
-      context: async() => {
-        return { db: await this.database.init(), pubsub: this.pubsub };
+      context: async ({ req, connection }: any) => {
+        const token = req
+          ? req.headers.authorization
+          : connection.authorization;
+        return {
+          db: await this.database.init(),
+          pubsub: this.pubsub,
+          token,
+          uuid: await require("machine-uuid")()
+        };
       },
       introspection: true,
       playground: true,
-      validationRules: [ depthLimit(4) ],
-      
+      validationRules: [depthLimit(4)],
     });
 
     this.server.applyMiddleware({ app: this.app });
-    
-    
   }
 
   private configRoutes() {

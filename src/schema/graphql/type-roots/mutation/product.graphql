@@ -3,4 +3,5 @@ type Mutation {
     updateProduct(product: ProductInput!): Result
     blockProduct: Result
     updateStock(code: ID!, stock: Int!): Result
+    
 }

@@ -1,4 +1,4 @@
-union Data = Product
+union Data = Product | User
 
 type Result {
   status: Boolean!
