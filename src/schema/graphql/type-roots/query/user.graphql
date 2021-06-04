@@ -16,4 +16,6 @@ type Query {
         password: String!): Result
     "Autenticarnos mediante token"
     me: Result
+    "Obtener los detalles de un usuario seleccionado"
+    user(id: ID!): Result
 }

@@ -14,6 +14,15 @@ const queryUserResolvers = {
     ) {
       return new UsersService(args, context).items(args.active);
     },
+    user(
+      _: {},
+      args: {
+        id: string
+      },
+      context: { db: Db }
+    ) {
+      return new UsersService(args, context).details();
+    },
     login(
       _: {},
       args: {

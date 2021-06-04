@@ -4,7 +4,7 @@ Operaciones para trabajar con los productos
 """
 input ProductInput {
     "Código del producto"
-    code: ID!
+    id: ID!
     "Nombre del producto"
     name: String!
     "Descripción con más detalles"

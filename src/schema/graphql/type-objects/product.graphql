@@ -1,7 +1,7 @@
 "Información del producto que se encontrará en el almacén"
 type Product {
     "Código del producto"
-    code: ID!
+    id: ID!
     "Nombre del producto"
     name: String!
     "Descripción del producto del almacén"

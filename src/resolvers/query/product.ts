@@ -4,7 +4,7 @@ import ProductsService from "./../../services/products.service";
 const queryProductResolvers: IResolvers = {
   Query: {
     hello: () => "Hola",
-    products(
+    async products(
       _: {},
       args: {
         page: number;
@@ -13,8 +13,13 @@ const queryProductResolvers: IResolvers = {
       },
       context: { db: Db }
     ) {
-      return new ProductsService(args, context).items(args.active);
+      return await new ProductsService(args, context).items(args.active);
     },
+    async product(
+      _: {}, args: {id: string}, context: { db: Db }, 
+    ){
+      return new ProductsService(args, context).details();
+    }
   },
 };
 

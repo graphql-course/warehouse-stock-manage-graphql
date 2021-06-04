@@ -9,4 +9,6 @@ type Query {
         "Especificar el estado del producto que queremos mostrar"
         active: StatusEnum = ACTIVE
     ): Result
+    "Obtener los detalles de un usuario seleccionado"
+    product(id: ID!): Result
 }

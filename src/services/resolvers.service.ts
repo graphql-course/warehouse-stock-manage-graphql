@@ -68,12 +68,10 @@ class ResolversService {
     }
   }
   // Obtener detalles del item
-  protected async get(collection: string) {
+  protected async get(collection: string, filter: object) {
     const collectionLabel = collection.toLowerCase();
     try {
-      return await findOneElement(this.getDb(), collection, {
-        id: this.variables.id,
-      }).then((result) => {
+      return await findOneElement(this.getDb(), collection, filter).then((result) => {
         if (result) {
           return {
             status: true,
@@ -82,7 +80,7 @@ class ResolversService {
           };
         }
         return {
-          status: true,
+          status: false,
           message: `${collectionLabel} no ha obtenido detalles porque no existe`,
           item: null,
         };

@@ -26,12 +26,22 @@ class ProductsService extends ResolversService {
       itemsPage,
       filter
     );
+    console.log(result.items)
     return {
       info: result.info,
       status: result.status,
       message: result.message,
-      list: result.items,
+      list: [
+        {name: 'aaaaa'}
+      ],
     };
+  }
+
+  async details() {
+    const filter = { id: this.getVariables().id };
+    const result = await this.get(this.collection, filter);
+    console.log(result);
+    return { status: result.status, message: result.message, item: result.item };
   }
   
   // Añadir
@@ -49,13 +59,13 @@ class ProductsService extends ResolversService {
     
     // Comprobar que el usuario no existe
     const productCheck = await findOneElement(this.getDb(), this.collection, {
-      code: product?.code,
+      id: product?.id,
     });
 
     if (productCheck !== null) {
       return {
         status: false,
-        message: `El producto ${product?.code} está registrado. Prueba con otro`,
+        message: `El producto ${product?.id} está registrado. Prueba con otro`,
         item: null,
       };
     }
@@ -89,7 +99,7 @@ class ProductsService extends ResolversService {
         item: null,
       };
     }
-    const filter = { code: product?.code };
+    const filter = { id: product?.id };
     const result = await this.update(
       this.collection,
       filter,
@@ -100,33 +110,6 @@ class ProductsService extends ResolversService {
       status: result.status,
       message: result.message,
       item: result.item,
-    };
-  }
-  async unblock(unblock: boolean, admin: boolean) {
-    const id = this.getVariables().id;
-    const product = this.getVariables().product;
-    if (!this.checkData(String(id) || "")) {
-      return {
-        status: false,
-        message: "El ID del usuario no se ha especificado correctamente",
-        item: null,
-      };
-    }
-  
-    let update = { active: unblock };
-   
-    const result = await this.update(
-      this.collection,
-      { id },
-      update,
-      "usuario"
-    );
-    const action = unblock ? "Desbloqueado" : "Bloqueado";
-    return {
-      status: result.status,
-      message: result.status
-        ? `${action} correctamente`
-        : `No se ha ${action.toLowerCase()} comprobarlo por favor`,
     };
   }
 

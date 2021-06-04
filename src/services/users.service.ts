@@ -36,6 +36,11 @@ class UsersService extends ResolversService {
       list: result.items,
     };
   }
+
+  async details() {
+    const result = await this.get(this.collection, {id: this.getVariables().id});
+    return { status: result.status, message: result.message, item: result.item };
+  }
   // Autenticarnos
   async auth() {
     let info = await new JWT().verify(this.getContext().token!);
