@@ -1,13 +1,15 @@
+import { IProduct } from './../../interfaces/product.interface';
 import { PubSub } from "apollo-server-express";
 import { IResolvers } from "graphql-tools";
 import { COLLECTIONS, UPDATE_STOCK } from "../../config/constants";
 import { Db } from "mongodb";
+import ProductsService from "../../services/products.service";
 
 const resolversProductMutation: IResolvers = {
   Mutation: {
-    async addProduct(_, { product }, context: { db: Db; pubsub: PubSub }) {
-      const database = context.db;
-      return await database
+    async addProduct(_, args: { product: IProduct }, context: { db: Db; pubsub: PubSub }) {
+      return new ProductsService(args, context).insert();
+      /*return await database
         .collection(COLLECTIONS.PRODUCTS)
         .insertOne(product)
         .then(async () => {
@@ -15,9 +17,7 @@ const resolversProductMutation: IResolvers = {
             .collection(COLLECTIONS.PRODUCTS)
             .find()
             .toArray();
-          context.pubsub.publish(UPDATE_STOCK, {
-            changeStock: listProducts,
-          });
+          
           return {
             status: true,
             message: "Producto correctamente añadido",
@@ -32,7 +32,7 @@ const resolversProductMutation: IResolvers = {
             list: [],
             item: null,
           };
-        });
+        });*/
     },
     async updateStock(_, { code, stock }, context: { db: Db; pubsub: PubSub }) {
       const database: Db = context.db;

@@ -1,3 +1,4 @@
+import { IProduct } from './product.interface';
 import { PubSub } from 'apollo-server-express';
 import { IUser } from './user.interface';
 import { IPaginationOptions } from './pagination-options.interface';
@@ -8,6 +9,7 @@ export interface IVariables {
     genre?: string;
     tag?: string;
     user?: IUser;
+    product?: IProduct;
     pagination?: IPaginationOptions;
 }
 

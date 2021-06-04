@@ -1,3 +1,4 @@
+import { PubSub } from 'apollo-server-express';
 import {
   findElements,
   findOneElement,
@@ -18,10 +19,13 @@ class ResolversService {
   }
 
   protected getContext(): IContextData {
-    return this.context;
+    return this.context!;
   }
   protected getDb(): Db {
     return this.context.db!;
+  }
+  protected getPubSub(): PubSub {
+    return this.context.pubsub!;
   }
   protected getUUID(): string | undefined { return this.context.uuid }
   protected getVariables(): IVariables {

@@ -3,7 +3,7 @@ import { Db } from "mongodb";
 
 const queryUserResolvers = {
   Query: {
-    async users(
+    users(
       _: {},
       args: {
         page: number;
@@ -14,7 +14,7 @@ const queryUserResolvers = {
     ) {
       return new UsersService(args, context).items(args.active);
     },
-    async login(
+    login(
       _: {},
       args: {
         email: string;

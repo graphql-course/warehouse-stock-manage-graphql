@@ -1,5 +1,12 @@
 type Query {
     hello: String
     "Lista de productos"
-    products: Result
+    products(
+        "Página seleccionada para acceder a ella"
+        page: Int = 1,
+        "Productos por página que se obtendrán por página"
+        itemsPage: Int = 20,
+        "Especificar el estado del producto que queremos mostrar"
+        active: StatusEnum = ACTIVE
+    ): Result
 }
