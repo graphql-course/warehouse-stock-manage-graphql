@@ -1,5 +1,5 @@
 import { IJwt } from "./../interfaces/jwt.interface";
-import { SECRET_KEY, EXPIRETIME, MESSAGES } from "./../config/constants";
+import { SECRET_KEY, EXPIRETIME, MESSAGES, machineUUID } from "./../config/constants";
 import jwt from "jsonwebtoken";
 import jwtDecode from "jwt-decode";
 
@@ -15,8 +15,7 @@ class JWT {
   async verify(token: string) {
     try {
       if (
-        (jwtDecode(token) as IJwt).uuid !== (await require("machine-uuid")())
-      ) {
+        (jwtDecode(token) as IJwt).uuid !== machineUUID()) {
         return MESSAGES.TOKEN_IN_THIS_MACHINE;
       }
       return jwt.verify(token, this.secretKey);

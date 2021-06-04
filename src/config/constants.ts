@@ -1,3 +1,4 @@
+import { machineIdSync } from 'node-machine-id';
 import environments from './environments';
 
 if (process.env.NODE_ENV !== 'production') {
@@ -48,3 +49,5 @@ export enum CURRENCIES_LIST {
     TOKEN_VERICATION_FAILED = 'token no valido, inicia sesion de nuevo',
     TOKEN_IN_THIS_MACHINE = 'El token no se ha generado en esta máquina, inténtalo de nuevo'
   }
+
+  export function machineUUID() { return machineIdSync(true); }

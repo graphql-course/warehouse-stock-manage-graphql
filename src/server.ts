@@ -7,6 +7,7 @@ import { ApolloServer, PubSub } from "apollo-server-express";
 import expressPlayGround from "graphql-playground-middleware-express";
 import depthLimit from "graphql-depth-limit";
 import Database from "./config/database";
+import { machineUUID } from "./config/constants";
 
 class Server {
   private app!: Application;
@@ -49,7 +50,7 @@ class Server {
   }
 
   private async configApolloServer() {
-    // COnfigurar el servidor apollo server
+    // Configurar el servidor apollo server
     this.server = new ApolloServer({
       schema: this.schema,
       context: async ({ req, connection }: any) => {
@@ -60,7 +61,7 @@ class Server {
           db: await this.database.init(),
           pubsub: this.pubsub,
           token,
-          uuid: await require("machine-uuid")()
+          uuid: machineUUID()
         };
       },
       introspection: true,
