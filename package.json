@@ -15,7 +15,7 @@
     "json",
     "dgt"
   ],
-  "homepage": "https://online-academy-2021.vercel.app",
+  "homepage": "https://stock-management-graphql.herokuapp.com/",
   "author": "Anartz Mugika Ledo <mugan86@gmail.com> (anartz-mugika.com)",
   "license": "MIT",
   "dependencies": {
@@ -32,6 +32,7 @@
     "graphql-playground-middleware-express": "^1.7.22",
     "graphql-tools": "^7.0.5",
     "jsonwebtoken": "^8.5.1",
+    "machine-uuid": "^1.2.0",
     "mongodb": "^3.6.9",
     "ncp": "^2.0.0",
     "subscriptions-transport-ws": "^0.9.18",

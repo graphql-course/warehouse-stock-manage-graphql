@@ -72,8 +72,8 @@ class Server {
   }
 
   private configRoutes() {
-    this.app.use("/hello", (_, res) => {
-      res.send("Bienvenidos/as al curso de GraphQL desde 0");
+    this.app.use("/welcome", (_, res) => {
+      res.send("Bienvenidos/as al control de Stock :)");
     });
 
     this.app.use(

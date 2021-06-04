@@ -1,11 +1,13 @@
 import { Db } from "mongodb";
 import { IUser } from "../../interfaces/user.interface";
+import UsersService from "../../services/users.service";
 
 const resolversUserMutation = {
     Mutation: {
       register(_: {}, args: { user: IUser }, 
         context: { db: Db, token: string, uuid: string}) {
-        // return new UsersService(_: {},  { user }, context).register();
+            console.log(context);
+        return new UsersService(args, context).register()
       },
       updateUser(_: {}, args: { user: IUser }, 
         context: { db: Db, token: string, uuid: string}) {

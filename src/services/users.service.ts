@@ -143,7 +143,7 @@ class UsersService extends ResolversService {
     return {
       status: result.status,
       message: result.message,
-      user: result.item,
+      item: result.item,
     };
   }
   // Modificar un usuario
@@ -154,7 +154,7 @@ class UsersService extends ResolversService {
       return {
         status: false,
         message: "Usuario no definido, procura definirlo",
-        user: null,
+        item: null,
       };
     }
     const filter = { id: user?.id };
@@ -167,7 +167,7 @@ class UsersService extends ResolversService {
     return {
       status: result.status,
       message: result.message,
-      user: result.item,
+      item: result.item,
     };
   }
   // Borrar el usuario seleccionado
@@ -194,7 +194,7 @@ class UsersService extends ResolversService {
       return {
         status: false,
         message: "El ID del usuario no se ha especificado correctamente",
-        genre: null,
+        item: null,
       };
     }
     if (user?.password === "1234") {
