@@ -1,7 +1,7 @@
 const dataResolvers = {
   Data: {
-    __resolveType(obj: { code: string; name: string }) {
-      if (obj.code) {
+    __resolveType(obj: { description: string; name: string }) {
+      if (obj.description) {
         return "Product";
       }
       if (obj.name) {

@@ -31,9 +31,7 @@ class ProductsService extends ResolversService {
       info: result.info,
       status: result.status,
       message: result.message,
-      list: [
-        {name: 'aaaaa'}
-      ],
+      list: result.items,
     };
   }
 
@@ -41,7 +39,8 @@ class ProductsService extends ResolversService {
     const filter = { id: this.getVariables().id };
     const result = await this.get(this.collection, filter);
     console.log(result);
-    return { status: result.status, message: result.message, item: result.item };
+    const item = result.item;
+    return { status: result.status, message: result.message, item };
   }
   
   // Añadir
@@ -73,6 +72,7 @@ class ProductsService extends ResolversService {
     product!.active = false;
 
     const result = await this.add(this.collection, product || {}, "producto");
+    const item = result.item;
     // Guardar el documento (registro) en la colección
     /*
     Actualizar con un cambio
@@ -84,7 +84,7 @@ class ProductsService extends ResolversService {
     return {
       status: result.status,
       message: result.message,
-      item: result.item,
+      item,
     };
   }
   // Modificar un usuario

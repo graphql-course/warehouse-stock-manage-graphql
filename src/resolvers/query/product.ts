@@ -16,10 +16,16 @@ const queryProductResolvers: IResolvers = {
       return await new ProductsService(args, context).items(args.active);
     },
     async product(
-      _: {}, args: {id: string}, context: { db: Db }, 
-    ){
-      return new ProductsService(args, context).details();
-    }
+      _: {},
+      args: { id: string },
+      context: { db: Db }
+    ): Promise<{
+      status: boolean;
+      message: string;
+      item: any;
+    }> {
+      return await new ProductsService(args, context).details();
+    },
   },
 };
 
