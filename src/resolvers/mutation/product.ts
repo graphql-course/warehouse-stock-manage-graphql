@@ -18,14 +18,11 @@ const resolversProductMutation: IResolvers = {
         .collection(COLLECTIONS.PRODUCTS)
         .findOne({ id });
       
-      const tokenValid = new JWT().isAdmin(context.token);
       // comprobar que product no es null
-      if (itemDetails === null || !tokenValid) {
+      if (itemDetails === null) {
         return {
           status: false,
-          message: (!tokenValid && itemDetails !== null ) ?
-                  "Necesitas un token válido y debes de ser ADMIN":
-                  "Producto no definido, procura definirlo",
+          message: "Producto no definido, procura definirlo",
           item: null,
         };
       }
@@ -61,6 +58,10 @@ const resolversProductMutation: IResolvers = {
         })
         .catch(() => false);
     },
+    async updateProduct(_, args: {product: IProduct}, context: {db: Db, pubsub: PubSub, token: string }) {
+      console.log(args, context)
+      return new ProductsService(args, context).modify();
+    }
   },
 };
 
