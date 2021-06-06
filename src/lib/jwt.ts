@@ -23,6 +23,10 @@ class JWT {
       return MESSAGES.TOKEN_VERICATION_FAILED;
     }
   }
+  isAdmin (token: string) {
+    if (token === '' || token === undefined || token === null) return false;
+    return ((jwtDecode(token) as IJwt).user.role === "ADMIN") ;
+  }
 }
 
 export default JWT;

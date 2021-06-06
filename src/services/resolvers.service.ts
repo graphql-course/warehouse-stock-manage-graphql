@@ -9,6 +9,9 @@ import {
 import { Db } from 'mongodb';
 import { pagination } from '../lib/pagination';
 import { IContextData, IVariables } from '../interfaces/resolvers-items.interface';
+import JWT from '../lib/jwt';
+import { exception } from 'console';
+import { MESSAGES } from '../config/constants';
 
 class ResolversService {
   private variables: IVariables;
@@ -75,20 +78,20 @@ class ResolversService {
         if (result) {
           return {
             status: true,
-            message: `${collectionLabel} ha sido cargada correctamente con sus detalles`,
+            message: `El '${collectionLabel}' ha sido cargada correctamente con sus detalles`,
             item: result,
           };
         }
         return {
           status: false,
-          message: `${collectionLabel} no ha obtenido detalles porque no existe`,
+          message: `El '${collectionLabel}' no ha obtenido detalles porque no existe`,
           item: null,
         };
       });
     } catch (error) {
       return {
         status: false,
-        message: `Error inesperado al querer cargar los detalles de ${collectionLabel}`,
+        message: `Error inesperado al querer cargar los detalles de '${collectionLabel}'`,
         item: null,
       };
     }
@@ -178,6 +181,21 @@ class ResolversService {
         message: `Error inesperado al eliminar el ${item}. Inténtalo de nuevo por favor`,
       };
     }
+  }
+  /**
+   * Comprobamos si el token es válido y i el admin es el que está
+   * intentando hacer una modificación
+   * @returns 
+   */
+  protected async verifyBeforeMutation() {
+    const token = this.getContext().token!;
+    let info = await new JWT().verify(token);
+    if (info === MESSAGES.TOKEN_VERICATION_FAILED ||
+      info === MESSAGES.TOKEN_IN_THIS_MACHINE ||
+      !new JWT().isAdmin(token)!) {
+      return false
+    }
+    return true;
   }
 }
 

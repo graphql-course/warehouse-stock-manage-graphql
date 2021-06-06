@@ -1,8 +1,9 @@
-import { ACTIVE_VALUES_FILTER, UPDATE_STOCK } from "./../config/constants";
+import { ACTIVE_VALUES_FILTER, MESSAGES, UPDATE_STOCK } from "./../config/constants";
 import { findOneElement } from "./../lib/db-operations";
 import { COLLECTIONS } from "../config/constants";
 import ResolversService from "./resolvers.service";
 import { IContextData } from "../interfaces/resolvers-items.interface";
+import JWT from "../lib/jwt";
 class ProductsService extends ResolversService {
   private collection = COLLECTIONS.PRODUCTS;
   constructor(variables: object, context: IContextData) {
@@ -26,7 +27,6 @@ class ProductsService extends ResolversService {
       itemsPage,
       filter
     );
-    console.log(result.items)
     return {
       info: result.info,
       status: result.status,
@@ -38,20 +38,21 @@ class ProductsService extends ResolversService {
   async details() {
     const filter = { id: this.getVariables().id };
     const result = await this.get(this.collection, filter);
-    console.log(result);
-    const item = result.item;
-    return { status: result.status, message: result.message, item };
+    return { status: result.status, message: result.message, item: result.item };
   }
   
   // Añadir
   async insert() {
+    const tokenValid = await this.verifyBeforeMutation();
     const product = this.getVariables().product;
-
+    console.log(tokenValid, product)
     // comprobar que product no es null
-    if (product === null) {
+    if ( !tokenValid || product === null ) {
       return {
         status: false,
-        message: "Producto no definido, procura definirlo",
+        message: (!tokenValid && product !== null ) ?
+                "Necesitas un token válido y debes de ser ADMIN":
+                "Producto no definido, procura definirlo",
         item: null,
       };
     }
@@ -89,13 +90,15 @@ class ProductsService extends ResolversService {
   }
   // Modificar un usuario
   async modify() {
-    
+    const tokenValid = this.verifyBeforeMutation();
     const product = this.getVariables().product;
     // comprobar que product no es null
-    if (product === null) {
+    if (product === null || !tokenValid) {
       return {
         status: false,
-        message: "Producto no definido, procura definirlo",
+        message: (!tokenValid && product !== null ) ?
+                "Necesitas un token válido y debes de":
+                "Producto no definido, procura definirlo",
         item: null,
       };
     }

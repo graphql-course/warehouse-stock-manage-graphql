@@ -1,9 +1,14 @@
+"Union de los resultados que se podrá usar con el type Result"
 union Data = Product | User
 
 type Result {
+  "Estado de la operación"
   status: Boolean!
+  "Mensaje de la operación efectuada"
   message: String!
+  "Lista de elementos del tipo de objeto seleccionado"
   list: [Data!]
+  "Elemento seleccionado del objeto que queremos"
   item: Data
   "Valor del token que se usará cuando lo creemos"
   token: String

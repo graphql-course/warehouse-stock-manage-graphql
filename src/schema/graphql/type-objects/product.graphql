@@ -14,4 +14,6 @@ type Product {
     active: Boolean!
     "Unidad monetaria que se le asigna a su precio"
     currency: String!
+    "Tipo de producto"
+    type: String!
 }

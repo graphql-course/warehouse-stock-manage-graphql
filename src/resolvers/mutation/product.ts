@@ -4,42 +4,31 @@ import { IResolvers } from "graphql-tools";
 import { COLLECTIONS, UPDATE_STOCK } from "../../config/constants";
 import { Db } from "mongodb";
 import ProductsService from "../../services/products.service";
+import JWT from '../../lib/jwt';
 
 const resolversProductMutation: IResolvers = {
   Mutation: {
-    async addProduct(_, args: { product: IProduct }, context: { db: Db; pubsub: PubSub }) {
+    async addProduct(_, args: { product: IProduct }, context: { db: Db; pubsub: PubSub, token: string }) {
       return new ProductsService(args, context).insert();
-      /*return await database
-        .collection(COLLECTIONS.PRODUCTS)
-        .insertOne(product)
-        .then(async () => {
-          const listProducts = await database
-            .collection(COLLECTIONS.PRODUCTS)
-            .find()
-            .toArray();
-          
-          return {
-            status: true,
-            message: "Producto correctamente añadido",
-            list: listProducts,
-            item: product,
-          };
-        })
-        .catch((error: Error) => {
-          return {
-            status: false,
-            message: error.message,
-            list: [],
-            item: null,
-          };
-        });*/
     },
-    async updateStock(_, { code, stock }, context: { db: Db; pubsub: PubSub }) {
+    async updateStock(_, { id, stock }, context: { db: Db; pubsub: PubSub, token: string }) {
       const database: Db = context.db;
       // Comprobar que la cantidad a restar no es mayor que la existente
       const itemDetails = await database
         .collection(COLLECTIONS.PRODUCTS)
-        .findOne({ code });
+        .findOne({ id });
+      
+      const tokenValid = new JWT().isAdmin(context.token);
+      // comprobar que product no es null
+      if (itemDetails === null || !tokenValid) {
+        return {
+          status: false,
+          message: (!tokenValid && itemDetails !== null ) ?
+                  "Necesitas un token válido y debes de ser ADMIN":
+                  "Producto no definido, procura definirlo",
+          item: null,
+        };
+      }
 
       // Si lo que queremos restar es mayor que la cantidad existente
       // ponemos el valor máximo para que se quede el stock vacio
@@ -49,7 +38,7 @@ const resolversProductMutation: IResolvers = {
       return await database
         .collection(COLLECTIONS.PRODUCTS)
         .updateOne(
-          { code },
+          { id },
           {
             $inc: { stock },
           }
@@ -67,7 +56,7 @@ const resolversProductMutation: IResolvers = {
             status: true,
             message: "Stock del producto correctamente actualizado",
             list,
-            item: list.filter((product: {code: string}) => product.code === code)[0],
+            item: list.filter((product: {id: string}) => product.id === id)[0],
           };
         })
         .catch(() => false);
