@@ -13,7 +13,10 @@ const queryProductResolvers: IResolvers = {
       },
       context: { db: Db }
     ) {
-      return await new ProductsService(args, context).items(args.active);
+      return await new ProductsService({pagination: {
+        page: args.page,
+        itemsPage: args.itemsPage
+      }}, context).items(args.active);
     },
     async product(
       _: {},

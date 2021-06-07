@@ -1,9 +1,8 @@
-import { ACTIVE_VALUES_FILTER, MESSAGES, UPDATE_STOCK } from "./../config/constants";
+import { ACTIVE_VALUES_FILTER } from "./../config/constants";
 import { findOneElement } from "./../lib/db-operations";
 import { COLLECTIONS } from "../config/constants";
 import ResolversService from "./resolvers.service";
 import { IContextData } from "../interfaces/resolvers-items.interface";
-import JWT from "../lib/jwt";
 class ProductsService extends ResolversService {
   private collection = COLLECTIONS.PRODUCTS;
   constructor(variables: object, context: IContextData) {
@@ -18,6 +17,7 @@ class ProductsService extends ResolversService {
     } else if (active === ACTIVE_VALUES_FILTER.INACTIVE) {
       filter = { active: false };
     }
+    console.log(this.getVariables());
     const page = this.getVariables().pagination?.page;
     const itemsPage = this.getVariables().pagination?.itemsPage;
     const result = await this.list(
