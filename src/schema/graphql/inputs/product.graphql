@@ -17,4 +17,6 @@ input ProductInput {
     stock: Int!
     active: Boolean=True
     type: ProductTypeEnum=OTHER
+    posterPath: String=""
+    releaseDate: String
 }

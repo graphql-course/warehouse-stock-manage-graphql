@@ -2,5 +2,7 @@ enum ProductTypeEnum {
     TECHNOLOGY
     SPORT
     FOOD
+    TV_SHOW
+    MOVIE
     OTHER
 }

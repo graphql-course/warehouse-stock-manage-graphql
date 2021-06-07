@@ -16,4 +16,8 @@ type Product {
     currency: String!
     "Tipo de producto"
     type: String!
+    "Imagen del producto"
+    posterPath: String!
+    "Fecha de lanzamiento"
+    releaseDate: String
 }

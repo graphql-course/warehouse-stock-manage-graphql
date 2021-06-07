@@ -5,7 +5,8 @@ const productTypeResolvers = {
     price: ({price, currency}: any) => {
         const symbol = CURRENCIES_LIST[currency as keyof typeof CURRENCIES_LIST] ;
         return `${price} ${symbol}`;
-    }
+    },
+    posterPath: (parent: {posterPath: string}) => (parent.posterPath) ? parent.posterPath: ''
   },
 };
 
