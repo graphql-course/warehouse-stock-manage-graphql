@@ -1,6 +1,5 @@
-import { ACTIVE_VALUES_FILTER } from "./../config/constants";
+import { ACTIVE_VALUES_FILTER, COLLECTIONS } from "./../config/constants";
 import { findOneElement } from "./../lib/db-operations";
-import { COLLECTIONS } from "../config/constants";
 import ResolversService from "./resolvers.service";
 import { IContextData } from "../interfaces/resolvers-items.interface";
 class ProductsService extends ResolversService {
@@ -17,7 +16,6 @@ class ProductsService extends ResolversService {
     } else if (active === ACTIVE_VALUES_FILTER.INACTIVE) {
       filter = { active: false };
     }
-    console.log(this.getVariables());
     const page = this.getVariables().pagination?.page;
     const itemsPage = this.getVariables().pagination?.itemsPage;
     const result = await this.list(
