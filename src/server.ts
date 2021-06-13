@@ -8,6 +8,7 @@ import expressPlayGround from "graphql-playground-middleware-express";
 import depthLimit from "graphql-depth-limit";
 import Database from "./config/database";
 import { machineUUID } from "./config/constants";
+import environments from "./config/environments";
 
 class Server {
   private app!: Application;
@@ -15,7 +16,7 @@ class Server {
   private schema!: GraphQLSchema;
   private database!: Database;
   private pubsub!: PubSub;
-  private readonly DEFAULT_PORT_SERVER = process.env.PORT || 3003;
+  private readonly DEFAULT_PORT_SERVER = process.env.PORT || 3002;
   private server!: ApolloServer;
   constructor(schema: GraphQLSchema) {
     if (schema === undefined) {
@@ -30,6 +31,7 @@ class Server {
    */
   private initialize() {
     this.configExpress();
+    this.initializeEnvironments();
     this.initializeDbPubSub();
     this.configApolloServer();
     this.configRoutes();
@@ -42,6 +44,14 @@ class Server {
     this.app.use(cors());
 
     this.app.use(compression());
+  }
+
+  private initializeEnvironments() {
+    // Inicializar variables de entorno
+    if (process.env.NODE_ENV !== "production") {
+      const envs = environments;
+      console.log(envs);
+    }
   }
 
   private async initializeDbPubSub() {
