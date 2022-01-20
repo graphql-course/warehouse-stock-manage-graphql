@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import JWT from "../lib/jwt";
 import ResolversService from "./resolvers.service";
 import { IContextData } from "../interfaces/resolvers-items.interface";
+import { IUser } from "../interfaces/user.interface";
 class UsersService extends ResolversService {
   private collection = COLLECTIONS.USERS;
   constructor(variables: object, context: IContextData) {
@@ -38,14 +39,22 @@ class UsersService extends ResolversService {
   }
 
   async details() {
-    const result = await this.get(this.collection, {id: this.getVariables().id});
-    return { status: result.status, message: result.message, item: result.item };
+    const result = await this.get(this.collection, {
+      id: this.getVariables().id,
+    });
+    return {
+      status: result.status,
+      message: result.message,
+      item: result.item,
+    };
   }
   // Autenticarnos
   async auth() {
     let info = await new JWT().verify(this.getContext().token!);
-    if (info === MESSAGES.TOKEN_VERICATION_FAILED ||
-      info === MESSAGES.TOKEN_IN_THIS_MACHINE) {
+    if (
+      info === MESSAGES.TOKEN_VERICATION_FAILED ||
+      info === MESSAGES.TOKEN_IN_THIS_MACHINE
+    ) {
       return {
         status: false,
         message: info,
@@ -62,11 +71,11 @@ class UsersService extends ResolversService {
   async login() {
     try {
       const variables = this.getVariables().user;
-      const uuid = this.getUUID() || '';
+      const uuid = this.getUUID() || "";
       console.log(variables, uuid);
-      const user = await findOneElement(this.getDb(), this.collection, {
+      const user: IUser = await findOneElement(this.getDb(), this.collection, {
         email: variables?.email,
-      });
+      }) as unknown as IUser;
       if (user === null) {
         return {
           status: false,
@@ -81,7 +90,6 @@ class UsersService extends ResolversService {
 
       if (passwordCheck !== null) {
         delete user.password;
-        delete user.birthday;
         delete user.registerDate;
       }
       return {
@@ -89,7 +97,9 @@ class UsersService extends ResolversService {
         message: !passwordCheck
           ? "Password y usuario no son correctos, sesión no iniciada"
           : "Usuario cargado correctamente",
-        token: !passwordCheck ? null : new JWT().sign({ user, uuid }, EXPIRETIME.H24),
+        token: !passwordCheck
+          ? null
+          : new JWT().sign({ user, uuid }, EXPIRETIME.H24),
         item: !passwordCheck ? null : user,
       };
     } catch (error) {
@@ -140,7 +150,7 @@ class UsersService extends ResolversService {
 
     // COmprobar el último usuario registrado para asignar ID
     user!.id = await asignDocumentId(this.getDb(), this.collection, {
-      registerDate: -1,
+      key: 'registerDate', order : -1,
     });
     // Asignar la fecha en formato ISO en la propiedad registerDate
     user!.registerDate = new Date().toISOString();
@@ -159,7 +169,6 @@ class UsersService extends ResolversService {
   }
   // Modificar un usuario
   async modify() {
-    
     const user = this.getVariables().user;
     // comprobar que user no es null
     if (user === null) {
@@ -206,7 +215,7 @@ class UsersService extends ResolversService {
         {},
         { active: true },
         {
-          password: bcrypt.hashSync(user?.password || '', 10),
+          password: bcrypt.hashSync(user?.password || "", 10),
         }
       );
     }

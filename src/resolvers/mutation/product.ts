@@ -1,22 +1,21 @@
 import { IProduct } from './../../interfaces/product.interface';
-import { PubSub } from "apollo-server-express";
-import { IResolvers } from "graphql-tools";
 import { COLLECTIONS, UPDATE_STOCK } from "../../config/constants";
 import { Db } from "mongodb";
 import ProductsService from "../../services/products.service";
-import JWT from '../../lib/jwt';
+import { PubSub } from 'graphql-subscriptions';
 
-const resolversProductMutation: IResolvers = {
+
+const resolversProductMutation = {
   Mutation: {
-    async addProduct(_, args: { product: IProduct }, context: { db: Db; pubsub: PubSub, token: string }) {
+    async addProduct(_: void, args: { product: IProduct }, context: { db: Db; pubsub: PubSub, token: string }) {
       return new ProductsService(args, context).insert();
     },
-    async updateStock(_, { id, stock }, context: { db: Db; pubsub: PubSub, token: string }) {
+    async updateStock(_: void, args: { id: string, stock: number }, context: { db: Db; pubsub: PubSub, token: string }) {
       const database: Db = context.db;
       // Comprobar que la cantidad a restar no es mayor que la existente
       const itemDetails = await database
         .collection(COLLECTIONS.PRODUCTS)
-        .findOne({ id });
+        .findOne({ id: args.id });
       
       // comprobar que product no es null
       if (itemDetails === null) {
@@ -29,22 +28,22 @@ const resolversProductMutation: IResolvers = {
 
       // Si lo que queremos restar es mayor que la cantidad existente
       // ponemos el valor máximo para que se quede el stock vacio
-      if (stock < 0 && stock + itemDetails.stock < 0) {
-        stock = -itemDetails.stock;
+      if (args.stock < 0 && args.stock + itemDetails.stock < 0) {
+        args.stock = -itemDetails.stock;
       }
       return await database
         .collection(COLLECTIONS.PRODUCTS)
         .updateOne(
-          { id },
+          { id: args.id },
           {
-            $inc: { stock },
+            $inc: { stock: args.stock },
           }
         )
         .then(async () => {
           const list = await database
           .collection(COLLECTIONS.PRODUCTS)
           .find()
-          .toArray();
+          .toArray() as unknown as Array<IProduct>;
           // Notificamos el cambio
           context.pubsub.publish(UPDATE_STOCK, {
             changeStock: list,
@@ -53,12 +52,12 @@ const resolversProductMutation: IResolvers = {
             status: true,
             message: "Stock del producto correctamente actualizado",
             list,
-            item: list.filter((product: {id: string}) => product.id === id)[0],
+            item: list.filter((product: {id: string}) => product.id === args.id)[0],
           };
         })
         .catch(() => false);
     },
-    async updateProduct(_, args: {product: IProduct}, context: {db: Db, pubsub: PubSub, token: string }) {
+    async updateProduct(_: void, args: {product: IProduct}, context: {db: Db, pubsub: PubSub, token: string }) {
       console.log(args, context)
       return new ProductsService(args, context).modify();
     }

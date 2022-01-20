@@ -12,15 +12,20 @@ const queryUserResolvers = {
       },
       context: { db: Db }
     ) {
-      return new UsersService({pagination: {
-        page: args.page,
-        itemsPage: args.itemsPage
-      }}, context).items(args.active);
+      return new UsersService(
+        {
+          pagination: {
+            page: args.page,
+            itemsPage: args.itemsPage,
+          },
+        },
+        context
+      ).items(args.active);
     },
     user(
       _: {},
       args: {
-        id: string
+        id: string;
       },
       context: { db: Db }
     ) {

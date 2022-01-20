@@ -1,21 +1,24 @@
-import MongoClient from 'mongodb';
-import chalk from 'chalk';
-import { DATABASE_DEFAULT } from './constants';
+import { Db, MongoClient } from "mongodb";
+import chalk from "chalk";
 class Database {
+    db?: Db;
 
-    async init() {
-        const MONGODB = String(process.env.DATABASE) || DATABASE_DEFAULT;
-        const client = await MongoClient.connect(MONGODB, { useNewUrlParser: true, useUnifiedTopology: true});
+    async init(): Promise<Db | undefined> {
+        console.log("================DATABASE================");
+        try {
+            const MONGODB = process.env.DATABASE || "mongodb://localhost:27017/breaking-bad-voting";
+            const mongoClient = await MongoClient.connect(MONGODB);
 
-        const db = await client.db();
-
-        if ( client.isConnected() ) {
-            console.log('==========DATABASE==========');
-            console.log(`STATUS: ${chalk.greenBright('ONLINE')}`);
-            console.log(`DATABASE: ${chalk.greenBright(db.databaseName)}`);
+            this.db = mongoClient.db();
+            // Mensaje visual con el estado
+            console.log(`STATUS: ${chalk.greenBright("ONLINE")}`);
+            console.log(`DATABASE: ${chalk.greenBright(this.db.databaseName)}`);
+        } catch(error) {
+            console.log(`ERROR: ${error}`);
+            console.log(`STATUS: ${chalk.redBright("OFFLINE")}`);
+            console.log(`DATABASE: ${chalk.redBright(this.db?.databaseName)}`);
         }
-
-        return db;
+        return this.db;
     }
 }
 

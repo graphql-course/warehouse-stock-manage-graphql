@@ -1,7 +1,7 @@
-import { IResolvers } from "graphql-tools";
+
 import { Db } from "mongodb";
 import ProductsService from "./../../services/products.service";
-const queryProductResolvers: IResolvers = {
+const queryProductResolvers = {
   Query: {
     hello: () => "Hola",
     async products(

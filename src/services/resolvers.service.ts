@@ -1,4 +1,4 @@
-import { PubSub } from 'apollo-server-express';
+import { PubSub } from 'graphql-subscriptions';
 import {
   findElements,
   findOneElement,
@@ -10,7 +10,6 @@ import { Db } from 'mongodb';
 import { pagination } from '../lib/pagination';
 import { IContextData, IVariables } from '../interfaces/resolvers-items.interface';
 import JWT from '../lib/jwt';
-import { exception } from 'console';
 import { MESSAGES } from '../config/constants';
 
 class ResolversService {
@@ -101,7 +100,7 @@ class ResolversService {
     try {
       return await insertOneElement(this.getDb(), collection, document).then(
         (res) => {
-          if (res.result.ok === 1) {
+          if (res.insertedId) {
             return {
               status: true,
               message: `Añadido correctamente el ${item}.`,
@@ -137,7 +136,7 @@ class ResolversService {
         filter,
         objectUpdate
       ).then((res) => {
-        if (res.result.nModified === 1 && res.result.ok) {
+        if (res.modifiedCount === 1) {
           return {
             status: true,
             message: `Elemento del ${item} actualizado correctamente.`,

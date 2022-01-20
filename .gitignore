@@ -2,3 +2,4 @@ node_modules
 
 .vercel
 build
+.DS_Store
